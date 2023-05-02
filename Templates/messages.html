@@ -1,0 +1,6 @@
+{% if data %}
+	{% for i in msg %}
+		 <li class="text-left list-group-item">{{i}}</li>
+	{% endfor %}
+{% endif %}
+<input type="hidden" id='status' name='status' value="{{online}}"/>

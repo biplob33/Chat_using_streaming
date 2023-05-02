@@ -1,0 +1,58 @@
+{% load static  %}
+<html>
+	<head>
+	<title>Chatting home</title>
+	<script src="{% static 'jquery.min.js' %}" ></script>
+	<script src="{% static 'bootstrap.min.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'chat.css' %}?h=10">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+	</head>
+	<body>
+	Hello, {{username}} <a href="/log/logout/">Logout</a>
+	<div id="talk"> You are taking to {{to}} and he is <span id='on'>offline</span></div>
+	<div id="msg-list-div" class="panel-body">
+            <ul id="msg-list" class="list-group">
+                {% for obj in chat %}
+                    {% if obj.sender == username  %}
+                    	{% if obj.to == to %}
+                        <div id = "spacing"></div>
+                       	 	<li class="text-right list-group-item">
+                                {{ obj.message_data }}
+                                <span class = "time">{{obj.created|time}}</span>
+                            </li>
+                        <div id = "spacing"></div>
+                        {% endif %}
+                    {% elif obj.to == username %}
+                    	{% if obj.sender  == to %}
+                        <div id = "spacing"></div>
+                    	    <li class="text-left list-group-item"> 
+                                {{ obj.message_data }}
+                                <span class = "time">{{obj.created|time}}</span>   
+                             </li>
+                        <div id = "spacing"></div>
+                    	{% endif %}
+                    {% endif %}
+                {% empty %}
+                    <li class="text-right list-group-item">No messages yet!</li>
+
+                {% endfor %}
+                <script>
+                    var chatlist = document.getElementById('msg-list-div');
+                    chatlist.scrollTop = chatlist.scrollHeight;
+                </script>
+            </ul>
+        </div>	
+	<form autocomplete="off" id="chat-form" method="post" action="/chat/post/">
+        <div id="chat-bottom" class="input-group">
+       		{% csrf_token %}
+       		<input type="hidden" id='to' name='to' value="{{to}}"/>
+            <input type="text" id="chat-msg" name="chat-msg" class="form-control"/>
+            <span class="input-group-btn">
+                <input class="btn btn-default" id="send" type="submit" value="Send"/>
+            </span>
+     	</div>
+    </form>
+	<script src="{% static 'chat.js' %}?s=12"></script>
+	</body>
+</html>

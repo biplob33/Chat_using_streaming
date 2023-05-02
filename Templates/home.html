@@ -1,0 +1,16 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+	</head>
+	<body>
+		Hello, {{user}}
+		<div id ="freinds">
+			{% for p in data %}
+				{% if p.username != user %}
+					<p><a href="/chat/chat?to={{ p.encpy }}" id='list'>{{ p.username }}
+					</a>{% if p.online %} <span id='online'>Online</span> {% else %}<span id ='last'>Not active now he was active on {{p.last_active}} {% endif %}</span></p>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</body>
+</html>

@@ -1,0 +1,65 @@
+{% load static  %}
+<html>
+<head>
+	<script src="{% static 'jquery.min.js' %}" ></script>
+	<script src="{% static 'bootstrap.min.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+<script>
+	function go(pass1,pass2,no)
+	{
+		if((no>1000000000)&&(no<9999999999))
+		{
+			if((pass1==pass2))
+			{
+				var f=document.getElementById('content1');
+				f.submit();
+				return true;
+			}
+			else
+			{
+				alert("Password Do Not Match");
+				var f=document.getElementById('password2');
+				f.value='';
+				var f=document.getElementById('password');
+				f.value='';
+				return false;
+			}
+		}
+		else
+		{
+			alert("Enter a valid mobile No");
+			var f=document.getElementById('Mob');
+			f.value='';
+			return false;
+		}
+	}
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+</head>
+<body>
+{% if messages %}
+	{% for message in messages %}
+		{% if message.tags %}<span class = {{message.tags}}> {{ message }}</span>{% endif %}
+	{% endfor %}
+{% endif %}
+	<form action="/log/auth_register/" method="POST" onsubmit=" return go(password.value,password2.value,Mob.value);">
+			{% csrf_token %}
+			<div id ='content1'>
+				<p><label for="Username">User Name:</label>
+				<input type="text" name="Username" value="" id="Username" placeholder="Your Required UserName" required></p>
+				<p><label for="Name">Full Name:</label>
+				<input type="text" name="Name" value="" id="Name" placeholder="Full Name" required></p>
+				<p>Mobile No: <input type="text" name="Mob" id="Mob" pattern="\d*" maxlength="10" placeholder="Enter mobile No"  required ></p>
+				<p>Password1:<input type="password" name="password" value="" id="password" placeholder="Password here" required></p>
+				<p>Password2:<input type="password" name="password2" value="" id="password2" placeholder="Re Password" required></p>
+				<p><input type="Submit" value="Register" ></p>
+			</div>
+		</form>
+</body>
+<style>
+	body
+	{
+		background-color:rgba(30, 255, 0, 0.53);;
+	}
+</style>
+</html>

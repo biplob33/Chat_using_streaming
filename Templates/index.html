@@ -1,0 +1,90 @@
+<!DOCTYPE unspecified PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+
+<script src="jquery" ></script>
+<script src="bootstrap_js"></script>
+<link rel="stylesheet" href="bootstrap_css">
+
+<style>
+#data
+{
+	overflow-y : scroll;
+	height: 85%; 
+}
+#close
+{
+	color:red;
+}
+
+.text-right {
+	background-color: #60fb60;
+	
+}
+#chat-bottom {
+    position: fixed;
+    bottom: 10px;
+}
+
+.list-group-item:LAST-CHILD {
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+.list-group-item {
+	padding: 4px 15px;
+	position: static;
+}
+
+</style>
+<title>Socket it</title>
+<div id ="data" class="panel-body"></div>
+<form autocomplete="off" action = "" onSubmit="postmsg();return false" id="chat-bottom" class="input-group">
+	<input type="text" name="message" value="" id = "message" class="form-control">
+	<span class="input-group-btn"/>
+	<input class="btn btn-default"  type="submit" name="submit" value="Send" id = "submit">
+</form>
+<script type="application/javascript">
+	var data = document.getElementById("data");
+	var loc = window.location.href.split(':')[1];
+	if(loc=='///C')
+		loc = 'localhost';
+	//loc = 'localhost'
+	var s = new WebSocket('ws:'+loc+':8200/');
+	s.readyState = function(){
+		data.innerHTML += "<br> Server Connecting";
+	};
+	s.onopen = function(){
+		data.innerHTML = "<br> Server Connected";
+	};
+	s.onmessage = function (e) {
+		data.innerHTML += "<br><li class =\"text-left list-group-item\" style=\"background-color:rgb("+process(e.data)[1]+")\">"+ process(e.data)[0] +"</li>"; 
+	};
+    s.onclose = function() {
+    	data.innerHTML += "<br> <div id = \"close\">Server Disconnected </div>";
+    };
+    function postmsg()
+    {
+    	var txt = document.getElementById("message").value;
+    	if(txt!='')
+   		{   		
+    		s.send(txt);
+        	data.innerHTML += "<br><li class =\"text-right list-group-item\">"+txt+"</li>";
+        	document.getElementById("message").value = '';
+        	var chatlist = document.getElementById('data');
+            chatlist.scrollTop = chatlist.scrollHeight+20;
+   		}
+    	return false;
+    }
+    function process(data) {
+    	
+    	var msg = data.split(',')[0].split('\'')[3];
+    	//data = JSON.parse(data);
+    	//console.log(data.split('[')[1].split(']'));
+    	var color = data.split('[')[1].split(']')[0];
+    	console.log([msg,color]);
+    	var chatlist = document.getElementById('data');
+        chatlist.scrollTop = chatlist.scrollHeight+40;
+    	return [msg,color];
+    }
+</script>
+</html>

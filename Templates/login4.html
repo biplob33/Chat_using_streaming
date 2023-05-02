@@ -1,0 +1,84 @@
+{% load static  %}
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+		<title>Login Or Register Yourself</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'custom.css' %}">
+		<script src = "{% static 'jquery.min.js' %}"></script>
+		<script src = "{% static 'custom.js' %}"></script>
+	</head>
+	<body>
+	<div class="container">
+	    	<div class="row">
+				<div class="col-md-6 col-md-offset-3">
+					<div class="panel panel-login">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-6">
+									<a href="#" class="active" id="login-form-link">Login</a>
+								</div>
+								<div class="col-xs-6">
+									<a href="#" id="register-form-link">Register</a>
+								</div>
+							</div>
+							<hr>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-lg-12">
+									<form id="login-form" action="/log/auth/" method="post" role="form" style="display: block;">
+										{% csrf_token %}
+										{% if messages %}
+											{% for message in messages %}
+												{% if message.tags %}<span class = {{message.tags}}> {{ message }}</span>{% endif %}
+											{% endfor %}
+										{% endif %}
+										<div class="form-group">
+											<input type="text" name="Name" id="Name" tabindex="1" class="form-control" placeholder="Username" value="" required>
+										</div>
+										<div class="form-group">
+											<input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" required>
+										</div>
+										<div class="form-group">
+											<div class="row">
+												<div class="col-sm-6 col-sm-offset-3">
+													<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Log In">
+												</div>
+											</div>
+										</div>
+									</form>
+									<form id="register-form" action="/log/auth_register/" method="post" role="form" style="display: none;" onsubmit=" return go(password.value,password2.value,Mob.value);">
+										{% csrf_token %}
+										<div class="form-group">
+											<input type="text" name="Username" id="Username" tabindex="1" class="form-control" placeholder="Username" value="" required>
+										</div>
+										<div class="form-group">
+											<input type="text" name="Name" id="Name" tabindex="1" class="form-control" placeholder="Full Name" value="" required>
+										</div>
+										<div class="form-group">
+											<input type="text" name="Mob" id="Mob" tabindex="1" class="form-control" placeholder="Mobile Number" pattern="\d*" maxlength="10" value="" required>
+										</div>
+										<div class="form-group">
+											<input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" required>
+										</div>
+										<div class="form-group">
+											<input type="password" name="password2" id="password2" tabindex="2" class="form-control" placeholder="Confirm Password" required>
+										</div>
+										<div class="form-group">
+											<div class="row">
+												<div class="col-sm-6 col-sm-offset-3">
+													<input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Register Now">
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>		
