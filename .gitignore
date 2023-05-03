@@ -1,3 +1,4 @@
 *.pyc
 log_reg/migrations/
 message/migrations/
+*.zip

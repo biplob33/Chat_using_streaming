@@ -40,6 +40,12 @@
 	min-width: 50%;
 
 }
+@media only screen and (max-width: 320px) {
+	.list-group-item {
+		min-width:none;
+	}
+  }
+  
 .list-group-item:after{
 	padding-bottom: 18px;
 	position: absolute;
