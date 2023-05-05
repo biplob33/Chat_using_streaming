@@ -9,8 +9,7 @@ from log_reg.models import userdata
 from django.utils.timezone import now
 import datetime
 import time
-import json
-import asyncio
+import concurrent.futures
 from django.contrib import messages as html_message
 def main_page(request):
     return render(request,'home_page.html')
@@ -105,7 +104,13 @@ def get_messages(request):
         time.sleep(0.3)
 def messages(request):
 
-    response = JsonResponse(get_messages(request))
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        future = executor.submit(get_messages, request)
+        return_value = future.result()
+
+    
+        
+    response = JsonResponse(return_value)
     response['Content-Type'] = 'text/event-stream'
     response['Cache-Control'] = 'no-cache',
     #response['Connection']=  'keep-alive'
