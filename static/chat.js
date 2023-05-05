@@ -36,30 +36,33 @@ function toggle_online(status) {
 	}
 }
 
+
 function getMessages(){
     if (!scrolling) {
         $.get('/chat/messages?count='+($('li.text-left')).length+'&to='+$('#to').val(), function(messages){
         	//alert(messages.length);
-        	if (messages.length!=63 && messages.length!=62)
-        	{	
-        		m.play();
-                $('#msg-list').append('<div id = "spacing"></div>');
-            	$('#msg-list').append('<li class="text-right list-group-item">' + messages+ '<span class = "time">'+timeNow()+'</span> </li>');
-                $('#msg-list').append('<div id = "spacing"></div>');
-            	var chatlist = document.getElementById('msg-list-div');
-            	chatlist.scrollTop = chatlist.scrollHeight;
-        	}
-        	else {
-        		if(messages.length==62) {
-        			toggle_online(true);
-        		}
-        		else {
-        			toggle_online(false);
-        		}
-        	}
+        messages = JSON.parse(messages)
+        console.log(messages)
+        if (messages.data === true)
+        {	
+            //m.play();
+            $('#msg-list').append('<div id = "spacing"></div>');
+            $('#msg-list').append('<li class="text-left list-group-item">' + messages.msg+ '<span class = "time">'+timeNow()+'</span> </li>');
+            $('#msg-list').append('<div id = "spacing"></div>');
+            var chatlist = document.getElementById('msg-list-div');
+            chatlist.scrollTop = chatlist.scrollHeight;
+
+        }
+        else {
+            toggle_online(messages.online)
+        }
+        scrolling = false;
+        getMessages()
         });
+        
     }
     scrolling = false;
+    
 }
 var scrolling = false;
 $(function(){
@@ -67,30 +70,8 @@ $(function(){
         scrolling = true;
     });
 
-    var event_msg = new EventSource('/chat/messages?count='+($('li.text-left')).length+'&to='+$('#to').val());
-    event_msg.onopen = function () {
-        console.log('Connected');
-    }
-    event_msg.onmessage = function (e) {
-        messages = JSON.parse(e.data)
-        console.log(messages)
-        if (messages.data === true)
-        	{	
-        		m.play();
-                $('#msg-list').append('<div id = "spacing"></div>');
-            	$('#msg-list').append('<li class="text-left list-group-item">' + messages.msg+ '<span class = "time">'+timeNow()+'</span> </li>');
-                $('#msg-list').append('<div id = "spacing"></div>');
-            	var chatlist = document.getElementById('msg-list-div');
-            	chatlist.scrollTop = chatlist.scrollHeight;
-        	}
-        	else {
-        		toggle_online(messages.online)
-        	}
-    }
-    event_msg.onerror = function (e) {
-        console.log(e)
-    }
-    //refreshTimer = setInterval(getMessages,700);
+   getMessages()
+    //refreshTimer = setInterval(getMessages,70);
 });
 
 $(document).ready(function() {

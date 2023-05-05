@@ -98,11 +98,12 @@ def get_messages(request):
             if initial_msg != out:
                 initial_msg = out.copy()
                 count = real_count
-                yield 'data:' + json.dumps(out) + '\n\n' 
+                #yield 'data:' + json.dumps(out) + '\n\n' 
                 #time.sleep(1)
+                return out
 def messages(request):
 
-    response = StreamingHttpResponse(get_messages(request))
+    response = JsonResponse(get_messages(request))
     response['Content-Type'] = 'text/event-stream'
     response['Cache-Control'] = 'no-cache',
     #response['Connection']=  'keep-alive'
