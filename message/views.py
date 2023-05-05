@@ -10,6 +10,7 @@ from django.utils.timezone import now
 import datetime
 import time
 import json
+import asyncio
 from django.contrib import messages as html_message
 def main_page(request):
     return render(request,'home_page.html')
@@ -101,6 +102,7 @@ def get_messages(request):
                 #yield 'data:' + json.dumps(out) + '\n\n' 
                 #time.sleep(1)
                 return out
+        time.sleep(0.3)
 def messages(request):
 
     response = JsonResponse(get_messages(request))
